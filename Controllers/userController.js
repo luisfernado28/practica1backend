@@ -18,13 +18,32 @@ function obtenerUsuarios(req,res){
     })
 }
 
+function obtenerUnUsuario(req, res) {
+    User.findOne({"nombre": req.query.nombre}, (err,user)=>{
+        if(err) return res.status(500).send({mensaje: err});
+        if(!user) return res.status(500).send({mensaje: "usuario no encontrado"});
+        res.status(200).send(user);
+    })
+}
+
+function deleteUser(req, res) {
+    User.findOne({"nombre" : req.query.nombre}, (err,user) =>{
+        if(err) return res.status(500).send({mensaje: err});
+        user.estado = false;
+        user.save();
+        res.status(200).send({message :"user deleted"});
+    })
+}
+
 function insert(req,res) {
     var user= new User({
         nombre: req.body.nombre,
-        usuario: req.body.usuario,
-        password: req.body.password,
-
-     });
+        ci: req.body.ci,
+        pass: req.body.pass,
+        email: req.body.email,
+        fecha: req.body.fecha,
+        estado: req.body.estado,
+    });
     user.save().then((us)=>{
         console.log(JSON.stringify(us));
         res.send(us)
@@ -34,10 +53,15 @@ function insert(req,res) {
     })
 };
 
+
+
 function updateUsuario(req,res){
-    User.findOne({usuario: req.body.usuario},(err,user)=>{
-        user.nombre = req.body.nombre;
+    User.findOne({"nombre": req.query.nombre},(err,user)=>{
+        user.ci = req.body.ci;
         user.pass = req.body.pass;
+        user.email = req.body.email;
+        user.fecha = req.body.estado;
+
         user.save().then((us)=>{
             console.log(JSON.stringify(us))
             res.send(us)
@@ -55,5 +79,7 @@ module.exports = {
     login,
     insert,
     obtenerUsuarios,
-    updateUsuario
+    updateUsuario,
+    deleteUser,
+    obtenerUnUsuario
 };

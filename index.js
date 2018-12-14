@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.get("/",(req,res)=>{
   res.send({mensaje: "oa mundo"})
 });
-// /usuario/insert
+
 app.use("/usuario", userRoute);
 app.listen(PORT,()=>{
   console.log("Servidor inicializado"+ PORT)
